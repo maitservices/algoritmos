@@ -1,0 +1,43 @@
+public class Test {
+//TODO melhorar as variaveis de limite;
+    public static void main(String a[]){
+        
+        List<String> ids = new ArrayList<>();
+        for(int i=0;i<=1746;i++){
+            ids.add("Item-"+i);
+        }
+        String join =" fi.coluna ";
+        Boolean addClausulaANDNoInicio=true;
+        
+       StringBuilder stringBuilder = new StringBuilder();
+       int limiteIN = 500;
+       StringBuilder stringBuilderIdsIN = new StringBuilder();
+       int qdtIds=ids.size();
+       for(String id:ids){
+           
+           if(limiteIN==500 && qdtIds>0){
+               if(addClausulaANDNoInicio){
+                    stringBuilder.append(" AND ");
+               }
+               stringBuilder.append(join).append(" IN ( ");
+           }
+           if(!stringBuilderIdsIN.toString().trim().equals("")){
+               stringBuilderIdsIN.append(",");
+           }
+           stringBuilderIdsIN.append("'").append(id).append("'");
+           
+           if(limiteIN==0 || qdtIds==1){
+               stringBuilder.append(stringBuilderIdsIN.toString());
+               stringBuilder.append(" ) \n ");
+               stringBuilderIdsIN = new StringBuilder();
+               limiteIN = 500;
+           }else{
+                limiteIN--;
+           }
+           qdtIds--;
+       }
+       
+         String retorno = stringBuilder.toString();
+         System.out.println(retorno);
+    }
+}
