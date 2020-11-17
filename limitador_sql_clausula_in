@@ -1,43 +1,34 @@
-public class Test {
-//TODO melhorar as variaveis de limite;
-    public static void main(String a[]){
-        
-        List<String> ids = new ArrayList<>();
-        for(int i=0;i<=1746;i++){
-            ids.add("Item-"+i);
-        }
-        String join =" fi.coluna ";
-        Boolean addClausulaANDNoInicio=true;
-        
+private String getQueryIN(List<String> ids, String join, Boolean addAND, Boolean addOR, Boolean alphaNumeric, Boolean addAndOrPrimeiraIteracao){
        StringBuilder stringBuilder = new StringBuilder();
        int limiteIN = 500;
        StringBuilder stringBuilderIdsIN = new StringBuilder();
        int qdtIds=ids.size();
+       if(addAND && addAndOrPrimeiraIteracao) stringBuilder.append(" AND ");
+       if(addOR && addAndOrPrimeiraIteracao) stringBuilder.append(" OR ");
+       Boolean primeiraIteracao = true;
        for(String id:ids){
            
-           if(limiteIN==500 && qdtIds>0){
-               if(addClausulaANDNoInicio){
-                    stringBuilder.append(" AND ");
-               }
+           if(limiteIN==500 && qdtIds>0  ){
+               if(addAND && !primeiraIteracao) stringBuilder.append(" AND ");
+               if(addOR && !primeiraIteracao) stringBuilder.append(" OR ");
+               
                stringBuilder.append(join).append(" IN ( ");
            }
            if(!stringBuilderIdsIN.toString().trim().equals("")){
-               stringBuilderIdsIN.append(",");
+               stringBuilderIdsIN.append(" , ");
            }
-           stringBuilderIdsIN.append("'").append(id).append("'");
+           stringBuilderIdsIN.append(alphaNumeric?"'":"").append(id).append(alphaNumeric?"'":"");
            
            if(limiteIN==0 || qdtIds==1){
                stringBuilder.append(stringBuilderIdsIN.toString());
-               stringBuilder.append(" ) \n ");
+               stringBuilder.append(" )  ");
                stringBuilderIdsIN = new StringBuilder();
                limiteIN = 500;
            }else{
                 limiteIN--;
            }
            qdtIds--;
+           primeiraIteracao=false;
        }
-       
-         String retorno = stringBuilder.toString();
-         System.out.println(retorno);
+        return stringBuilder.toString();
     }
-}
